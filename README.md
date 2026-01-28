@@ -4,6 +4,7 @@ This demo app shows a simple user profile app set up using
 - index.html with pure js and css styles
 - nodejs backend with express module
 - mongodb for data storage
+- Pre-requisites : mongo and mongo-express images (`docker pull`)
 
 All components are docker-based
 
@@ -16,14 +17,34 @@ Step 1: Create docker network
     docker network create mongo-network 
 
 Step 2: start mongodb
-
-    docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password --name mongodb --net mongo-network mongo    
+```
+docker run -d \ 
+-p 27017:27017 \ 
+-e MONGO_INITDB_ROOT_USERNAME=admin \ 
+-e MONGO_INITDB_ROOT_PASSWORD=password \ 
+--net mongo-network \ 
+--name mongodb \ 
+mongo
+```
+_NOTE: -d (detached mode), -p (port binding), -e (set environment variable)_
 
 Step 3: start mongo-express
-
-    docker run -d -p 8081:8081 -e ME_CONFIG_MONGODB_ADMINUSERNAME=admin -e ME_CONFIG_MONGODB_ADMINPASSWORD=password --net mongo-network --name mongo-express -e ME_CONFIG_MONGODB_SERVER=mongodb -e ME_CONFIG_MONGODB_URL=mongodb://mongodb:27017 mongo-express   
-
-_NOTE: creating docker-network in optional. You can start both containers in a default network. In this case, just emit `--net` flag in `docker run` command_
+```
+docker run -d \
+-p 8081:8081 \
+-e ME_CONFIG_MONGODB_ADMINUSERNAME=admin \ 
+-e ME_CONFIG_MONGODB_ADMINPASSWORD=password \ 
+-e ME_CONFIG_BASICAUTH_USERNAME=user \ 
+-e ME_CONFIG_BASICAUTH_PASSWORD=pass \ 
+-e ME_CONFIG_MONGODB_SERVER=mongodb \ 
+-e ME_CONFIG_MONGODB_URL=mongodb://mongodb:27017 \ 
+--net mongo-network \ 
+--name mongo-express \ 
+mongo-express
+```
+_NOTE: The first two variables are used to access monggodb. `BASICAUTH` are used to access the web UI of mongoexpress. `MONGODB_SERVER` is used to tell mongo-express container which container it should look for. And the `MONGODB_URL` is an important one to set to avoid error saying that mongo-express can't locate mongodb. 
+All those variables can be found in the mongo express documentation on github
+_
 
 Step 4: open mongo-express from browser
 

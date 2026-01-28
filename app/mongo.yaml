@@ -19,5 +19,3 @@ services:
       - ME_CONFIG_BASICAUTH_PASSWORD=pass
       - ME_CONFIG_MONGODB_SERVER=mongodb
       - ME_CONFIG_MONGODB_URL=mongodb://mongodb:27017
-    depends_on:
-      - "mongodb"
