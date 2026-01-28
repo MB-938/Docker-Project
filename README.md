@@ -43,8 +43,7 @@ docker run -d \
 mongo-express
 ```
 _NOTE: The first two variables are used to access monggodb. `BASICAUTH` are used to access the web UI of mongoexpress. `MONGODB_SERVER` is used to tell mongo-express container which container it should look for. And the `MONGODB_URL` is an important one to set to avoid error saying that mongo-express can't locate mongodb. 
-All those variables can be found in the mongo express documentation on github
-_
+All those variables can be found in the mongo express documentation on github_
 
 Step 4: open mongo-express from browser
 
