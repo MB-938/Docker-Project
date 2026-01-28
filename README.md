@@ -90,5 +90,5 @@ Step 5: access the nodejs application from browser
     docker build -t my-app:1.0 .       
 
 The dot "." at the end of the command denotes location of the Dockerfile.
-"my-app:1.0" will be the image we will use to `docker run my-app:1.0`.
+"my-app:1.0" will be the image we will use to `docker run my-app:1.0`. Then access the container using `docker exec -it "container-id" /bin/sh`
 Check Dockerfile to see the configuration and explanation
