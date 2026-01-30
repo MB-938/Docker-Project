@@ -20,8 +20,8 @@ Step 2: start mongodb
 ```
 docker run -d \ 
 -p 27017:27017 \ 
--e MONGO_INITDB_ROOT_USERNAME=admin \ 
--e MONGO_INITDB_ROOT_PASSWORD=password \ 
+-e MONGO_INITDB_ROOT_USERNAME="" \ 
+-e MONGO_INITDB_ROOT_PASSWORD="" \ 
 --net mongo-network \ 
 --name mongodb \ 
 mongo
@@ -32,10 +32,10 @@ Step 3: start mongo-express
 ```
 docker run -d \
 -p 8081:8081 \
--e ME_CONFIG_MONGODB_ADMINUSERNAME=admin \ 
--e ME_CONFIG_MONGODB_ADMINPASSWORD=password \ 
--e ME_CONFIG_BASICAUTH_USERNAME=user \ 
--e ME_CONFIG_BASICAUTH_PASSWORD=pass \ 
+-e ME_CONFIG_MONGODB_ADMINUSERNAME="" \ 
+-e ME_CONFIG_MONGODB_ADMINPASSWORD="" \ 
+-e ME_CONFIG_BASICAUTH_USERNAME="" \ 
+-e ME_CONFIG_BASICAUTH_PASSWORD="" \ 
 -e ME_CONFIG_MONGODB_SERVER=mongodb \ 
 -e ME_CONFIG_MONGODB_URL=mongodb://mongodb:27017 \ 
 --net mongo-network \ 
@@ -64,12 +64,37 @@ Step 7: Access you nodejs application UI from browser
 ### With Docker Compose
 
 #### To start the application
+Step 1 : Create a yaml file that will be used by `docker compose`. In our case it's called `mongo.yaml`
 
-Step 1: start mongodb and mongo-express
+```yaml
+version: '3'
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=""
+      - MONGO_INITDB_ROOT_PASSWORD=""
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=""
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=""
+      - ME_CONFIG_BASICAUTH_USERNAME=""
+      - ME_CONFIG_BASICAUTH_PASSWORD=""
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+      - ME_CONFIG_MONGODB_URL=mongodb://mongodb:27017
+```
 
-    docker-compose -f docker-compose.yaml up
+Step 2: start mongodb and mongo-express
 
-_ "up" option to start, "down" to stop.You can access the mongo-express under localhost:8080 from your browser_
+    docker-compose -f mongo.yaml up
+
+_NOTE : "up" option to start, "down" to stop.You can access the mongo-express under localhost:8080 from your browser_
 
 Step 2: in mongo-express UI - create a new database "user-account"
 
@@ -86,9 +111,28 @@ Step 5: access the nodejs application from browser
     http://localhost:3000
 
 #### To build a docker image from the application
+Step 1 : Create a `docker file`
+```dockerfile
+FROM node:20-alpine
 
+ENV MONGO_DB_USERNAME="" \
+    MONGO_DB_PWD=""
+
+RUN mkdir -p /home/app
+
+COPY ./app /home/app
+
+# set default dir so that next commands executes in /home/app dir
+WORKDIR /home/app
+
+# will execute npm install in /home/app because of WORKDIR
+RUN npm install
+
+# no need for /home/app/server.js because of WORKDIR
+CMD ["node", "server.js"]
+```
+Step 2 : Build the app
     docker build -t my-app:1.0 .       
 
 The dot "." at the end of the command denotes location of the Dockerfile.
-"my-app:1.0" will be the image we will use to `docker run my-app:1.0`. Then access the container using `docker exec -it "container-id" /bin/sh`
-Check Dockerfile to see the configuration and explanation
+"my-app:1.0" will be the image we will use to `docker run my-app:1.0`.
