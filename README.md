@@ -1,12 +1,8 @@
-## demo app - developing with Docker
+## Docker Project 1
 
-This demo app shows a simple user profile app set up using
-- index.html with pure js and css styles
-- nodejs backend with express module
-- mongodb for data storage
-- Pre-requisites : mongo and mongo-express images (`docker pull`)
-
-All components are docker-based
+    - Run mongodb and mongo-express containers, use the application to add entry to mongodb and review the changes using mongo express.
+    - Create mongo.yaml file that will be used for `docker compose`
+    - Create `docker file` that will be used to build the image
 
 ### With Docker
 
