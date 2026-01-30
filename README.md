@@ -1,12 +1,12 @@
-## demo app - developing with Docker
+## Docker-Project 2
 
-This demo app shows a simple user profile app set up using
-- index.html with pure js and css styles
-- nodejs backend with express module
-- mongodb for data storage
-- Pre-requisites : mongo and mongo-express images (`docker pull`)
+Our own application image pushed on a private repository + two images `mongodb` and `mongo express` from docker hub
 
-All components are docker-based
+    - Configure and create a private Docker repository in Nexus
+    - Configure Docker to access the private Nexus repository and then push the application image
+    - Add the application to the yaml file that will be used for `docker compose`
+    - Update the `server.js` code so the application can access mongodb container in a `docker compose`scenario
+    - Rebuild and push the app then run it using `docker compose` on another machine
 
 ### With Nexus
 
